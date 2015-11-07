@@ -18,6 +18,8 @@ RUN buildDeps=" \
         mbstring  \
 	mysql \
 	mysqli \
+	pdo \
+	pdo_mysql \
 	bz2 \
 	zip \
 	gd \
