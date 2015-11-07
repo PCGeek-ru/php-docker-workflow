@@ -1,0 +1,30 @@
+mariadb:
+  image: "pcgeek/mariadb:5.5"
+  ports:
+    - "3306:3306"
+  volumes:
+    - ./mariadb/5.5/data:/var/lib/mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+
+php-fpm:
+  image: "pcgeek/php-fpm:5.4"
+  volumes:
+    - ./php/5.4/sites:/var/www
+    - ./php/5.4/config/php.ini:/usr/local/etc/php/php.ini
+  links:
+    - mariadb:db
+
+apache:
+  image: "pcgeek/apache:2.4"
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - ./php/5.4/sites:/var/www
+    - ./apache/2.4/vhosts:/usr/local/apache2/conf/vhosts
+    - ./apache/2.4/config/httpd.conf:/usr/local/apache2/conf/httpd.conf
+  links:
+    - php-fpm
+
+
