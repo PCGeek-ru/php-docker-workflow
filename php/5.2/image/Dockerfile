@@ -7,12 +7,12 @@ MAINTAINER Volkov Vyacheslav <volkov.slava31@gmail.com>
 RUN apt-get update && apt-get install -y ca-certificates curl libpcre3 librecode0 libsqlite3-0 libxml2 --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 # phpize deps
-RUN apt-get update && apt-get install -y autoconf file g++ gcc libc-dev make pkg-config re2c --no-install-recommends && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y autoconf2.13 file g++ gcc libc-dev make pkg-config re2c --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 ENV PHP_INI_DIR /usr/local/etc/php
 RUN mkdir -p $PHP_INI_DIR/conf.d
 
-ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fastcgi --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data
 
 ENV GPG_KEYS 0B96609E270F565C13292B24C13C70B87267B52D 0A95E9A026542D53835E3F3A7DEC4E69FC9C83D7
 RUN set -xe \
@@ -21,6 +21,8 @@ RUN set -xe \
 	done
 
 ENV PHP_VERSION 5.2.17
+
+COPY docker-php-ext-* /usr/local/bin/
 
 RUN buildDeps=" \
                 $PHP_EXTRA_BUILD_DEPS \
@@ -45,11 +47,12 @@ RUN buildDeps=" \
         && rm php* \
         && cd /usr/src/php \
 	&& patch -p1 < /tmp/php-fpm.diff \
+	&& ./buildconf --force \
         && ./configure \
                 --with-config-file-path="$PHP_INI_DIR" \
                 --with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
+		--with-fpm-conf="$PHP_INI_DIR/php-fpm.conf" \
                 $PHP_EXTRA_CONFIGURE_ARGS \
-                --disable-cgi \
 		--enable-mysqlnd \
                 --with-curl \
                 --with-openssl \
@@ -64,10 +67,8 @@ RUN buildDeps=" \
 
 #RUN apt-get update && apt-get install -y procps --no-install-recommends && rm -r /var/lib/apt/lists/*
 
-COPY docker-php-ext-* /usr/local/bin/
-
 WORKDIR /var/www/html
-COPY php-fpm.conf /usr/local/etc/
+COPY php-fpm.conf /usr/local/etc/php
 
 EXPOSE 9000
-#CMD ["php-cgi", "--fpm"]
+CMD ["php-cgi", "--fpm"]

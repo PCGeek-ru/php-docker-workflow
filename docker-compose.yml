@@ -8,7 +8,7 @@ mariadb:
     MYSQL_ROOT_PASSWORD: root
 
 php-fpm:
-  image: "pcgeek/php-fpm:5.4"
+  image: "pcgeek/php-fpm:5.2"
   volumes:
     - ./php/5.4/sites:/var/www
     - ./php/5.4/config/php.ini:/usr/local/etc/php/php.ini
