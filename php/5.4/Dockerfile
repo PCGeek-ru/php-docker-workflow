@@ -12,6 +12,7 @@ RUN buildDeps=" \
 	libpng12-dev \
 	libjpeg62-turbo-dev \
 	libxpm-dev \
+	libxml2-dev \
 	libfreetype6-dev \
     " \
     && phpModules=" \
@@ -24,6 +25,7 @@ RUN buildDeps=" \
 	zip \
 	gd \
 	mcrypt \
+	soap \
 	xdebug \
     " \
     && apt-get update \
