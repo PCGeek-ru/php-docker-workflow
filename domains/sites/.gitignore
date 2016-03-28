@@ -1,6 +1,6 @@
 
 *
 !.gitignore
-!html
-!html/*
-
+!html/
+!html/**/*
+html/**/phpmyadmin/
