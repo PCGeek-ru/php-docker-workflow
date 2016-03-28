@@ -3,14 +3,22 @@ mariadb:
   ports:
     - "3306:3306"
   volumes:
-    - ./mariadb/5.5/data:/var/lib/mysql
+    - ./databases/mariadb/5.5:/var/lib/mysql
   environment:
     MYSQL_ROOT_PASSWORD: root
 
-php-fpm:
-  image: "pcgeek/php:7-fpm"
+php5.4-fpm:
+  image: "pcgeek/php-fpm:5.4"
   volumes:
-    - ./php/7/sites:/var/www
+    - ./domains/sites:/var/www
+    - ./php/5.4/config/php.ini:/usr/local/etc/php/php.ini
+  links:
+    - mariadb:db
+
+php7-fpm:
+  image: "pcgeek/php-fpm:7"
+  volumes:
+    - ./domains/sites:/var/www
     - ./php/7/config/php.ini:/usr/local/etc/php/php.ini
   links:
     - mariadb:db
@@ -21,10 +29,11 @@ apache:
     - "80:80"
     - "443:443"
   volumes:
-    - ./php/5.4/sites:/var/www
-    - ./apache/2.4/vhosts:/usr/local/apache2/conf/vhosts
+    - ./domains/sites:/var/www
+    - ./domains/vhosts:/usr/local/apache2/conf/vhosts
     - ./apache/2.4/config/httpd.conf:/usr/local/apache2/conf/httpd.conf
   links:
-    - php-fpm
+    - php5.4-fpm
+    - php7-fpm
 
 
