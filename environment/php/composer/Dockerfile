@@ -9,10 +9,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Display version information
 RUN composer --version
 
-# Set up the application directory
-VOLUME ["/app"]
-WORKDIR /app
-
 # Set up the command arguments
 CMD ["-"]
 ENTRYPOINT ["composer", "--ansi"]
