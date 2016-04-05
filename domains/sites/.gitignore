@@ -3,3 +3,6 @@
 !.gitignore
 !html/
 !html/**/*
+
+html/www/phpmyadmin/*
+!html/www/phpmyadmin/config.inc.php

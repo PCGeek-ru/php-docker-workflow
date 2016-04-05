@@ -42,18 +42,3 @@ apache:
   links:
     - php5.4-fpm
     - php7-fpm
-
-phpmyadmin:
-  image: phpmyadmin/phpmyadmin
-  container_name: myadmin
-  environment:
-  # - PMA_ARBITRARY=1
-   - PMA_HOSTS=mariadb5,mariadb10
-  restart: always
-  ports:
-   - 8080:80
-  links:
-    - mariadb5
-    - mariadb10
-
-
